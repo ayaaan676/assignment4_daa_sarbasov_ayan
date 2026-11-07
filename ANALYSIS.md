@@ -216,3 +216,13 @@ The benchmark results are also saved in `benchmark_results.txt`.
 ## Sources and AI assistance
 
 - AI assistance was used to help understand algorithm concepts
+
+## Own tests
+
+| Command | Input | Expected result | Actual result | What it checks |
+|---|---|---|---|---|
+| py tools/run.py --check | Public test suite | All tests pass | 44/44 PASS | General correctness |
+| py benchmark/benchmark.py | Random strings, n=500, m=30 | Same results | PASS | Random search |
+| py benchmark/benchmark.py | Repetitive strings, n=3000, m=30 | Same results | PASS | Repetitive search |
+| py - | Text="di", Pattern="aa" | No matches | PASS | Rabin-Karp hash collision |
+| py - | Text="aaaaa", Pattern="aaa" | Matches at positions 0, 1, 2 | PASS | Overlapping matches |
