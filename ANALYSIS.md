@@ -161,6 +161,58 @@ The modulus 101 is deliberately small, so collisions are more frequent than with
 
 **Boundary test:** Patterns with duplicates and suffix relationships. This checks duplicate counts, suffix matches and correct state reset.
 
+## Search comparison
+
+All three algorithms were tested using the same text and pattern for each case.
+
+- Algorithms: Naive, KMP and Rabin-Karp.
+- Text sizes: 500, 1500 and 3000 characters.
+- Pattern length: 30 characters.
+- Random generator: Python random module, seed 42, alphabet `abcd`.
+- Repetitive generator: text and pattern contain only `a`.
+- Number of measured runs: 3 per algorithm, size and case.
+- Timing unit: milliseconds (ms).
+- Timing method: `time.perf_counter()`.
+- Warm-up: No separate warm-up was used.
+- JIT: No JIT compilation was used; Python ran normally.
+- Timing scope: Only the algorithm function call was measured. Input generation and correctness comparison were excluded.
+- Correctness: All three algorithms returned identical results for every tested input.
+
+### Raw measurements
+
+| Case | n | m | Algorithm | Run 1 | Run 2 | Run 3 | Median (ms) |
+|---|---:|---:|---|---:|---:|---:|---:|
+| Random | 500 | 30 | Naive | 0.1402 | 0.0824 | 0.0779 | 0.0824 |
+| Random | 500 | 30 | KMP | 0.0782 | 0.0780 | 0.0799 | 0.0782 |
+| Random | 500 | 30 | RK | 0.1552 | 0.1081 | 0.1024 | 0.1081 |
+| Random | 1500 | 30 | Naive | 0.1991 | 0.2132 | 0.2022 | 0.2022 |
+| Random | 1500 | 30 | KMP | 0.1771 | 0.1758 | 0.1747 | 0.1758 |
+| Random | 1500 | 30 | RK | 0.3380 | 0.3201 | 0.3184 | 0.3201 |
+| Random | 3000 | 30 | Naive | 0.4217 | 0.4218 | 0.4245 | 0.4218 |
+| Random | 3000 | 30 | KMP | 0.3639 | 0.3618 | 0.3644 | 0.3639 |
+| Random | 3000 | 30 | RK | 0.6323 | 0.6394 | 0.6327 | 0.6327 |
+| Repetitive | 500 | 30 | Naive | 1.2115 | 1.1856 | 1.1479 | 1.1856 |
+| Repetitive | 500 | 30 | KMP | 0.2508 | 0.2426 | 0.2312 | 0.2426 |
+| Repetitive | 500 | 30 | RK | 0.9703 | 0.9595 | 0.9558 | 0.9595 |
+| Repetitive | 1500 | 30 | Naive | 3.6877 | 4.0485 | 3.7953 | 3.7953 |
+| Repetitive | 1500 | 30 | KMP | 0.3479 | 0.3698 | 0.3203 | 0.3479 |
+| Repetitive | 1500 | 30 | RK | 3.0067 | 3.0175 | 4.0679 | 3.0175 |
+| Repetitive | 3000 | 30 | Naive | 7.2917 | 7.1991 | 7.3712 | 7.2917 |
+| Repetitive | 3000 | 30 | KMP | 0.6873 | 0.6518 | 0.6347 | 0.6518 |
+| Repetitive | 3000 | 30 | RK | 7.1163 | 6.0561 | 5.9208 | 6.0561 |
+
+### Observations
+
+For random inputs, all three algorithms performed relatively quickly. KMP was the fastest in these measurements.
+
+For repetitive inputs, Naive and Rabin-Karp became significantly slower because many positions required additional character comparisons. KMP handled repetitive inputs more efficiently.
+
+Rabin-Karp uses base 31 and modulus 101. This small modulus can produce more hash collisions, which increase the number of character verifications. Actual character comparison is necessary to guarantee correct results.
+
+These measurements show the performance of this implementation on the tested inputs. They do not prove theoretical complexity.
+
+The benchmark results are also saved in `benchmark_results.txt`.
+
 ## Sources and AI assistance
 
 - AI assistance was used to help understand algorithm concepts
